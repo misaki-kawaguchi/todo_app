@@ -32,5 +32,8 @@ class Item with _$Item {
     @DateTimeTimestampConverter() required DateTime createdAt,
   }) = _Item;
 
+  // Itemにtitleが入っていない場合
+  factory Item.empty() => Item(title: '', createdAt: DateTime.now());
+
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }
