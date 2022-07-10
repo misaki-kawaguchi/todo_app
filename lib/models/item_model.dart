@@ -35,5 +35,14 @@ class Item with _$Item {
   // Itemにtitleが入っていない場合
   factory Item.empty() => Item(title: '', createdAt: DateTime.now());
 
+  // Map型に変換する
+  factory Item.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Item.fromJson(data).copyWith(id: doc.id);
+  }
+
+  // idを削除
+  Map<String, dynamic> toDocument() => toJson()..remove('id');
+
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }
