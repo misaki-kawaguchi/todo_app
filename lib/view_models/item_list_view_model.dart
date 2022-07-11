@@ -10,7 +10,9 @@ final itemListProvider =
 
 // データの操作を行うクラス
 class ItemListNotifier extends StateNotifier<AsyncValue<List<Item>>> {
-  ItemListNotifier(this._read) : super(const AsyncValue.loading());
+  ItemListNotifier(this._read) : super(const AsyncValue.loading()){
+    retrieveItems();
+  }
 
   // 外部からProviderを取得可能にする
   final Reader _read;

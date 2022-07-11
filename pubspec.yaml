@@ -12,6 +12,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   build_runner: ^2.1.11
+  intl: ^0.17.0
+  platform: ^3.1.0
 
   # Firebase
   firebase_core: ^1.19.1
