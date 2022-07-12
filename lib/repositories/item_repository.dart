@@ -6,6 +6,7 @@ import 'package:todo_app/models/item_model.dart';
 abstract class BaseItemRepository {
   Future<List<Item>> retrieveItems();
   Future<String> createItem({required Item item});
+  Future<void> updateItem({required Item item});
 }
 
 // Firestoreのインスタンスを取得するProvider
@@ -25,7 +26,8 @@ class ItemRepository implements BaseItemRepository {
   @override
   Future<List<Item>> retrieveItems() async {
     try {
-      final snap = await _read(firebaseFirestoreProvider).collection('lists').get();
+      final snap =
+          await _read(firebaseFirestoreProvider).collection('lists').get();
       return snap.docs.map((doc) => Item.fromDocument(doc)).toList();
     } catch (e) {
       throw e.toString();
@@ -43,6 +45,19 @@ class ItemRepository implements BaseItemRepository {
               );
       // ドキュメントのidを返す
       return docRef.id;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // updateメソッドで値を更新する
+  @override
+  Future<void> updateItem({required Item item}) async {
+    try {
+      await _read(firebaseFirestoreProvider)
+          .collection('lists')
+          .doc(item.id)
+          .update(item.toDocument());
     } catch (e) {
       throw e.toString();
     }
