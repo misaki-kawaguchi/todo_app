@@ -12,6 +12,7 @@ class ItemListPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemList = ref.watch(itemListProvider);
+    final itemListNotifier = ref.watch(itemListProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,6 +35,7 @@ class ItemListPage extends HookConsumerWidget {
                     return DateFormat('yyyy/MM/dd HH:mm', "ja")
                         .format(item.createdAt);
                   }
+
                   return Column(
                     children: [
                       ListTile(
@@ -42,7 +44,13 @@ class ItemListPage extends HookConsumerWidget {
                         subtitle: Text(getTodayDate()),
                         trailing: Checkbox(
                           value: item.isCompleted,
-                          onChanged: (_) {},
+                          onChanged: (_) {
+                            itemListNotifier.updateItem(
+                              updateItem: item.copyWith(
+                                isCompleted: !item.isCompleted,
+                              ),
+                            );
+                          },
                         ),
                         onTap: () => AddItemDialog.show(context, item),
                         onLongPress: () {},
