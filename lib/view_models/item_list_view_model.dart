@@ -10,7 +10,7 @@ final itemListProvider =
 
 // データの操作を行うクラス
 class ItemListNotifier extends StateNotifier<AsyncValue<List<Item>>> {
-  ItemListNotifier(this._read) : super(const AsyncValue.loading()){
+  ItemListNotifier(this._read) : super(const AsyncValue.loading()) {
     retrieveItems();
   }
 
@@ -49,6 +49,23 @@ class ItemListNotifier extends StateNotifier<AsyncValue<List<Item>>> {
               item.copyWith(id: itemId),
             ),
         ),
+      );
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // Itemを更新
+  Future<void> updateItem({required Item updateItem}) async {
+    try {
+      await _read(itemRepositoryProvider).updateItem(item: updateItem);
+      state.whenData(
+        (items) {
+          state = AsyncValue.data([
+            for (final item in items)
+              if (item.id == updateItem.id) updateItem else item
+          ]);
+        },
       );
     } catch (e) {
       throw e.toString();
