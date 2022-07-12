@@ -12,6 +12,9 @@ class AddItemDialog extends HookConsumerWidget {
 
   final Item item;
 
+  // 追加・更新の判定を行う
+  bool get isUpdating => item.id != null;
+
   // ダイアログを表示
   static void show(BuildContext context, Item item) {
     showDialog(
@@ -40,13 +43,22 @@ class AddItemDialog extends HookConsumerWidget {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
+                  primary: isUpdating
+                      ? Colors.green
+                      : Theme.of(context).primaryColor,
                 ),
                 onPressed: () {
-                  itemListNotifier.addItem(title: textController.text.trim());
+                  isUpdating
+                      ? itemListNotifier.updateItem(
+                          updateItem: item.copyWith(
+                            title: textController.text.trim(),
+                          ),
+                        )
+                      : itemListNotifier.addItem(
+                          title: textController.text.trim());
                   Navigator.pop(context);
                 },
-                child: const Text('追加'),
+                child: Text(isUpdating ? '更新' : '追加'),
               ),
             ),
           ],
