@@ -7,6 +7,7 @@ abstract class BaseItemRepository {
   Future<List<Item>> retrieveItems();
   Future<String> createItem({required Item item});
   Future<void> updateItem({required Item item});
+  Future<void> deleteItem({required String id});
 }
 
 // Firestoreのインスタンスを取得するProvider
@@ -58,6 +59,16 @@ class ItemRepository implements BaseItemRepository {
           .collection('lists')
           .doc(item.id)
           .update(item.toDocument());
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // deleteメソッドで値を削除する
+  @override
+  Future<void> deleteItem({required String id}) async {
+    try {
+      await _read(firebaseFirestoreProvider).collection('lists').doc(id).delete();
     } catch (e) {
       throw e.toString();
     }
