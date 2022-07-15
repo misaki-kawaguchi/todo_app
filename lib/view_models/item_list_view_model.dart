@@ -71,4 +71,15 @@ class ItemListNotifier extends StateNotifier<AsyncValue<List<Item>>> {
       throw e.toString();
     }
   }
+
+  // Itemを削除
+  Future<void> deleteItem({required String itemId}) async {
+    try {
+      await _read(itemRepositoryProvider).deleteItem(id: itemId);
+      state.whenData((items) => state =
+          AsyncValue.data(items..removeWhere((item) => item.id == itemId)));
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }
