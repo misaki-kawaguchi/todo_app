@@ -36,28 +36,40 @@ class ItemListPage extends HookConsumerWidget {
                         .format(item.createdAt);
                   }
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        key: ValueKey(item.id),
-                        title: Text(item.title),
-                        subtitle: Text(getTodayDate()),
-                        trailing: Checkbox(
-                          value: item.isCompleted,
-                          onChanged: (_) {
-                            itemListNotifier.updateItem(
-                              updateItem: item.copyWith(
-                                isCompleted: !item.isCompleted,
-                              ),
-                            );
-                          },
+                  return ProviderScope(
+                      child: Dismissible(
+                    key: ValueKey(item.id),
+                        background: Container(
+                          color: Colors.red,
                         ),
-                        onTap: () => AddItemDialog.show(context, item),
-                        onLongPress: () {},
-                      ),
-                      const Divider(height: 2),
-                    ],
-                  );
+                    onDismissed: (_) {
+                      itemListNotifier.deleteItem(itemId: item.id!);
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          key: ValueKey(item.id),
+                          title: Text(item.title),
+                          subtitle: Text(getTodayDate()),
+                          trailing: Checkbox(
+                            value: item.isCompleted,
+                            onChanged: (_) {
+                              itemListNotifier.updateItem(
+                                updateItem: item.copyWith(
+                                  isCompleted: !item.isCompleted,
+                                ),
+                              );
+                            },
+                          ),
+                          onTap: () => AddItemDialog.show(context, item),
+                          onLongPress: () => itemListNotifier.deleteItem(
+                            itemId: item.id!,
+                          ),
+                        ),
+                        const Divider(height: 2),
+                      ],
+                    ),
+                  ));
                 },
               ),
         loading: () => const Center(child: CircularProgressIndicator()),
